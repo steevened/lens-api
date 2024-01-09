@@ -1,26 +1,53 @@
 import { Injectable } from '@nestjs/common';
 import { CreateCameraDto } from './dto/create-camera.dto';
 import { UpdateCameraDto } from './dto/update-camera.dto';
+import { PrismaService } from '../prisma/prisma.service';
 
 @Injectable()
 export class CamerasService {
+  constructor(private prismaService: PrismaService) {}
+
   create(createCameraDto: CreateCameraDto) {
-    return 'This action adds a new camera';
+    const slug = createCameraDto.name.toLowerCase().replace(' ', '-');
+
+    return this.prismaService.camera.create({
+      data: {
+        ...createCameraDto,
+        slug,
+      },
+    });
   }
 
   findAll() {
-    return `This action returns all cameras`;
+    return this.prismaService.camera.findMany();
   }
 
   findOne(id: number) {
-    return `This action returns a #${id} camera`;
+    return this.prismaService.camera.findUnique({
+      where: {
+        id,
+      },
+    });
+  }
+
+  findOneBySlug(slug: string) {
+    return this.prismaService.camera.findUnique({
+      where: {
+        slug,
+      },
+    });
   }
 
   update(id: number, updateCameraDto: UpdateCameraDto) {
-    return `This action updates a #${id} camera`;
+    return this.prismaService.camera.update({
+      where: { id },
+      data: updateCameraDto,
+    });
   }
 
   remove(id: number) {
-    return `This action removes a #${id} camera`;
+    return this.prismaService.camera.delete({
+      where: { id },
+    });
   }
 }
