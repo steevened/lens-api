@@ -7,6 +7,9 @@ import {
   Param,
   Delete,
   ParseIntPipe,
+  NotFoundException,
+  InternalServerErrorException,
+  BadRequestException,
 } from '@nestjs/common';
 import { CamerasService } from './cameras.service';
 import { CreateCameraDto } from './dto/create-camera.dto';
@@ -21,40 +24,69 @@ export class CamerasController {
 
   @Post()
   @ApiCreatedResponse({ type: CameraEntity })
-  create(@Body() createCameraDto: CreateCameraDto) {
-    return this.camerasService.create(createCameraDto);
+  async create(@Body() createCameraDto: CreateCameraDto) {
+    const camera = await this.camerasService.create(createCameraDto);
+    if (!camera) {
+      throw new BadRequestException('Camera could not be created');
+    }
+    return camera;
   }
 
   @Get()
   @ApiOkResponse({ type: [CameraEntity] })
-  findAll() {
-    return this.camerasService.findAll();
+  async findAll() {
+    const cameras = await this.camerasService.findAll();
+    if (!cameras) {
+      throw new NotFoundException('Cameras not found');
+    }
+    return cameras;
   }
 
   @Get(':id')
   @ApiOkResponse({ type: CameraEntity })
-  findOne(@Param('id', ParseIntPipe) id: number) {
-    return this.camerasService.findOne(id);
+  async findOne(@Param('id', ParseIntPipe) id: number) {
+    const camera = await this.camerasService.findOne(id);
+    if (!camera) {
+      throw new NotFoundException(`Camera #${id} not found`);
+    }
+    return camera;
   }
 
   @Get('/slug/:slug')
   @ApiOkResponse({ type: CameraEntity })
-  findOneBySlug(@Param('slug') slug: string) {
-    return this.camerasService.findOneBySlug(slug);
+  async findOneBySlug(@Param('slug') slug: string) {
+    const camera = await this.camerasService.findOneBySlug(slug);
+    if (!camera) {
+      throw new NotFoundException(`Camera ${slug} not found`);
+    }
+    return camera;
   }
 
   @Patch(':id')
   @ApiOkResponse({ type: CameraEntity })
-  update(
+  async update(
     @Param('id', ParseIntPipe) id: number,
     @Body() updateCameraDto: UpdateCameraDto,
   ) {
-    return this.camerasService.update(id, updateCameraDto);
+    const cameraToUpdate = await this.findOne(id);
+    const updatedCamera = await this.camerasService.update(
+      cameraToUpdate.id,
+      updateCameraDto,
+    );
+    if (!updatedCamera) {
+      throw new InternalServerErrorException('Camera could not be updated');
+    }
+    return updatedCamera;
   }
 
   @Delete(':id')
   @ApiOkResponse({ type: CameraEntity })
-  remove(@Param('id', ParseIntPipe) id: number) {
-    return this.camerasService.remove(id);
+  async remove(@Param('id', ParseIntPipe) id: number) {
+    const cameraToDelete = await this.findOne(id);
+    const deletedCamera = await this.camerasService.remove(cameraToDelete.id);
+    if (!deletedCamera) {
+      throw new InternalServerErrorException('Camera could not be deleted');
+    }
+    return deletedCamera;
   }
 }

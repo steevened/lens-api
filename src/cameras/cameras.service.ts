@@ -41,7 +41,10 @@ export class CamerasService {
   update(id: number, updateCameraDto: UpdateCameraDto) {
     return this.prismaService.camera.update({
       where: { id },
-      data: updateCameraDto,
+      data: {
+        ...updateCameraDto,
+        slug: updateCameraDto.name.toLowerCase().replace(' ', '-'),
+      },
     });
   }
 
