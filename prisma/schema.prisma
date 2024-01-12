@@ -13,13 +13,15 @@ model Camera {
   id Int @id @default(autoincrement())
   name String  @unique
   slug String @unique
-
+  brand Brand @relation(fields: [brandId], references: [id])
+  brandId Int
 }
 
 model Brand {
   id Int @id @default(autoincrement())
   name String @unique
   slug String @unique
+  cameras Camera[]
 
 }
 

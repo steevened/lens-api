@@ -3,28 +3,6 @@ import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
 async function main() {
-  const camera1 = await prisma.camera.upsert({
-    where: {
-      name: 'Sony a6500',
-    },
-    update: {},
-    create: {
-      name: 'Sony a6500',
-      slug: 'sony-a6500',
-    },
-  });
-
-  const camera2 = await prisma.camera.upsert({
-    where: {
-      name: 'Canon 5D Mark IV',
-    },
-    update: {},
-    create: {
-      name: 'Canon 5D Mark IV',
-      slug: 'canon-5d-mark-iv',
-    },
-  });
-
   const brand1 = await prisma.brand.upsert({
     where: {
       name: 'Sony',
@@ -44,6 +22,33 @@ async function main() {
     create: {
       name: 'Canon',
       slug: 'canon',
+    },
+  });
+  const camera1 = await prisma.camera.upsert({
+    where: {
+      name: 'Sony a6500',
+    },
+    update: {
+      brandId: brand1.id,
+    },
+    create: {
+      name: 'Sony a6500',
+      slug: 'sony-a6500',
+      brandId: brand1.id,
+    },
+  });
+
+  const camera2 = await prisma.camera.upsert({
+    where: {
+      name: 'Canon 5D Mark IV',
+    },
+    update: {
+      brandId: brand2.id,
+    },
+    create: {
+      name: 'Canon 5D Mark IV',
+      slug: 'canon-5d-mark-iv',
+      brandId: brand2.id,
     },
   });
 
