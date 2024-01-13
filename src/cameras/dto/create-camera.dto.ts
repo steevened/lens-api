@@ -12,4 +12,9 @@ export class CreateCameraDto {
   @IsInt()
   @IsNotEmpty()
   readonly brandId: number;
+
+  @ApiProperty()
+  @IsInt()
+  @IsNotEmpty()
+  readonly typeId: number;
 }

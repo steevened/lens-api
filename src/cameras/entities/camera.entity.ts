@@ -13,4 +13,7 @@ export class CameraEntity implements Camera {
 
   @ApiProperty()
   brandId: number;
+
+  @ApiProperty()
+  typeId: number;
 }

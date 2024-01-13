@@ -24,6 +24,29 @@ async function main() {
       slug: 'canon',
     },
   });
+
+  const type1 = await prisma.cameraType.upsert({
+    where: {
+      name: 'Mirrorless',
+    },
+    update: {},
+    create: {
+      name: 'Mirrorless',
+      slug: 'mirrorless',
+    },
+  });
+
+  const type2 = await prisma.cameraType.upsert({
+    where: {
+      name: 'DSLR',
+    },
+    update: {},
+    create: {
+      name: 'DSLR',
+      slug: 'dslr',
+    },
+  });
+
   const camera1 = await prisma.camera.upsert({
     where: {
       name: 'Sony a6500',
@@ -35,6 +58,7 @@ async function main() {
       name: 'Sony a6500',
       slug: 'sony-a6500',
       brandId: brand1.id,
+      typeId: type1.id,
     },
   });
 
@@ -49,28 +73,7 @@ async function main() {
       name: 'Canon 5D Mark IV',
       slug: 'canon-5d-mark-iv',
       brandId: brand2.id,
-    },
-  });
-
-  const type1 = await prisma.type.upsert({
-    where: {
-      name: 'Mirrorless',
-    },
-    update: {},
-    create: {
-      name: 'Mirrorless',
-      slug: 'mirrorless',
-    },
-  });
-
-  const type2 = await prisma.type.upsert({
-    where: {
-      name: 'DSLR',
-    },
-    update: {},
-    create: {
-      name: 'DSLR',
-      slug: 'dslr',
+      typeId: type2.id,
     },
   });
 
