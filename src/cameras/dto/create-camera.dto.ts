@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsString, MinLength } from 'class-validator';
+import { IsInt, IsNotEmpty, IsString, MinLength } from 'class-validator';
 
 export class CreateCameraDto {
   @ApiProperty()
@@ -7,4 +7,9 @@ export class CreateCameraDto {
   @IsNotEmpty()
   @MinLength(3)
   readonly name: string;
+
+  @ApiProperty()
+  @IsInt()
+  @IsNotEmpty()
+  readonly brandId: number;
 }
