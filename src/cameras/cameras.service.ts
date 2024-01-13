@@ -18,8 +18,17 @@ export class CamerasService {
     });
   }
 
-  findAll() {
-    return this.prismaService.camera.findMany();
+  findAll({ brand, type }: { brand?: string; type?: string }) {
+    return this.prismaService.camera.findMany({
+      where: {
+        brand: {
+          slug: brand,
+        },
+        type: {
+          slug: type,
+        },
+      },
+    });
   }
 
   findOne(id: number) {

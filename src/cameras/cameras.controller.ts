@@ -10,11 +10,17 @@ import {
   NotFoundException,
   InternalServerErrorException,
   BadRequestException,
+  Query,
 } from '@nestjs/common';
 import { CamerasService } from './cameras.service';
 import { CreateCameraDto } from './dto/create-camera.dto';
 import { UpdateCameraDto } from './dto/update-camera.dto';
-import { ApiTags, ApiCreatedResponse, ApiOkResponse } from '@nestjs/swagger';
+import {
+  ApiTags,
+  ApiCreatedResponse,
+  ApiOkResponse,
+  ApiQuery,
+} from '@nestjs/swagger';
 import { CameraEntity } from './entities/camera.entity';
 
 @Controller('cameras')
@@ -34,8 +40,16 @@ export class CamerasController {
 
   @Get()
   @ApiOkResponse({ type: [CameraEntity] })
-  async findAll() {
-    const cameras = await this.camerasService.findAll();
+  @ApiQuery({ name: 'Brand slug', required: false })
+  @ApiQuery({ name: 'Camera type slug', required: false })
+  async findAll(
+    @Query('Brand slug') brand?: string,
+    @Query('Camera type slug') type?: string,
+  ) {
+    const cameras = await this.camerasService.findAll({
+      brand,
+      type,
+    });
     if (!cameras) {
       throw new NotFoundException('Cameras not found');
     }
