@@ -10,4 +10,7 @@ export class CameraEntity implements Camera {
 
   @ApiProperty()
   slug: string;
+
+  @ApiProperty()
+  brandId: number;
 }
