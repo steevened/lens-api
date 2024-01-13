@@ -1,9 +1,19 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+} from '@nestjs/common';
 import { CameraTypesService } from './camera-types.service';
 import { CreateCameraTypeDto } from './dto/create-camera-type.dto';
 import { UpdateCameraTypeDto } from './dto/update-camera-type.dto';
+import { ApiTags } from '@nestjs/swagger';
 
 @Controller('camera-types')
+@ApiTags('Camera Types')
 export class CameraTypesController {
   constructor(private readonly cameraTypesService: CameraTypesService) {}
 
@@ -23,7 +33,10 @@ export class CameraTypesController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateCameraTypeDto: UpdateCameraTypeDto) {
+  update(
+    @Param('id') id: string,
+    @Body() updateCameraTypeDto: UpdateCameraTypeDto,
+  ) {
     return this.cameraTypesService.update(+id, updateCameraTypeDto);
   }
 

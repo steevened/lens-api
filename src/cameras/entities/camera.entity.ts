@@ -1,5 +1,5 @@
-import { Camera } from '@prisma/client';
 import { ApiProperty } from '@nestjs/swagger';
+import { Camera } from '@prisma/client';
 
 export class CameraEntity implements Camera {
   @ApiProperty()

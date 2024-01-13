@@ -1,26 +1,54 @@
 import { Injectable } from '@nestjs/common';
 import { CreateCameraTypeDto } from './dto/create-camera-type.dto';
 import { UpdateCameraTypeDto } from './dto/update-camera-type.dto';
+import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
 export class CameraTypesService {
+  constructor(private prisma: PrismaService) {}
+
   create(createCameraTypeDto: CreateCameraTypeDto) {
-    return 'This action adds a new cameraType';
+    return this.prisma.cameraType.create({
+      data: {
+        ...createCameraTypeDto,
+        slug: createCameraTypeDto.name.toLowerCase().replace(' ', '-'),
+      },
+    });
   }
 
   findAll() {
-    return `This action returns all cameraTypes`;
+    return this.prisma.cameraType.findMany();
   }
 
   findOne(id: number) {
-    return `This action returns a #${id} cameraType`;
+    return this.prisma.cameraType.findUnique({
+      where: {
+        id,
+      },
+    });
+  }
+
+  findOneBySlug(slug: string) {
+    return this.prisma.cameraType.findUnique({
+      where: {
+        slug,
+      },
+    });
   }
 
   update(id: number, updateCameraTypeDto: UpdateCameraTypeDto) {
-    return `This action updates a #${id} cameraType`;
+    return this.prisma.cameraType.update({
+      where: { id },
+      data: {
+        ...updateCameraTypeDto,
+        slug: updateCameraTypeDto.name.toLowerCase().replace(' ', '-'),
+      },
+    });
   }
 
   remove(id: number) {
-    return `This action removes a #${id} cameraType`;
+    return this.prisma.cameraType.delete({
+      where: { id },
+    });
   }
 }
