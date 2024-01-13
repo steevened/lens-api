@@ -28,6 +28,14 @@ export class BrandsService {
     });
   }
 
+  findOneBySlug(slug: string) {
+    return this.prisma.brand.findUnique({
+      where: {
+        slug,
+      },
+    });
+  }
+
   update(id: number, updateBrandDto: UpdateBrandDto) {
     return this.prisma.brand.update({
       where: { id },
