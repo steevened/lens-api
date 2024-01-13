@@ -53,6 +53,7 @@ async function main() {
     },
     update: {
       brandId: brand1.id,
+      typeId: type1.id,
     },
     create: {
       name: 'Sony a6500',
@@ -68,6 +69,7 @@ async function main() {
     },
     update: {
       brandId: brand2.id,
+      typeId: type2.id,
     },
     create: {
       name: 'Canon 5D Mark IV',
